@@ -49,6 +49,11 @@ class Comanda
      */
     private $bar;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $comentari;
+
     public function __construct()
     {
         $this->productes = new ArrayCollection();
@@ -139,6 +144,18 @@ class Comanda
     public function setBar(?Bar $bar): self
     {
         $this->bar = $bar;
+
+        return $this;
+    }
+
+    public function getComentari(): ?string
+    {
+        return $this->comentari;
+    }
+
+    public function setComentari(?string $comentari): self
+    {
+        $this->comentari = $comentari;
 
         return $this;
     }

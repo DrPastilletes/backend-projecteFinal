@@ -44,6 +44,11 @@ class Bar
      */
     private $taules;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $contrasenya;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -185,6 +190,18 @@ class Bar
                 $taule->setBar(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContrasenya(): ?string
+    {
+        return $this->contrasenya;
+    }
+
+    public function setContrasenya(string $contrasenya): self
+    {
+        $this->contrasenya = $contrasenya;
 
         return $this;
     }
