@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<style>
+    body{
+        background-image:url('{{ '/img/bar.jpg' }}');
+        background-attachment: fixed;
+    }
+    .divLogin{
+        background-color: #FFFFFF;
+        margin: 5px;
+        padding: 15px;
+    }
+</style>
+    <div class="container align-middle divLogin">
+        <div class="row customLoginRow">
+            <div class="col-lg-8 loginFormCustom ">
+                <div class="container">
+                    <h1>Login</h1>
+                </div>
+{#                {{ path('comprovarLogin') }} #}
+                <form action="" method="post" class="paddingForm">
+                    <div class="form-group">
+                        <label for="correu">Usuari</label>
+                        <input type="text" class="form-control" id="correu" name="usuari" aria-describedby="emailHelp"
+                               placeholder="Entra l'usuari">
+                        <small id="emailHelp" class="form-text recordatoriColor">No compartexis l'usuari ni la contrasenya
+                            amb ningú.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="contra">Contrasenya</label>
+                        <input type="password" class="form-control" id="contra" name="contra" placeholder="Contrasenya">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
