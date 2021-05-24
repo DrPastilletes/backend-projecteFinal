@@ -25,7 +25,7 @@ class Categoria
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Producte::class, mappedBy="categoria")
+     * @ORM\OneToMany(targetEntity=Producte::class, mappedBy="categoria", cascade={"remove"})
      */
     private $productes;
 
@@ -96,5 +96,10 @@ class Categoria
         $this->bar = $bar;
 
         return $this;
+    }
+
+    public function __toString(): String
+    {
+        return $this->getNom();
     }
 }

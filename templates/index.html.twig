@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1>Benvingut {{ barLogged.nom }}</h1>
+                <h3>Que vols fer?</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">Taules</div>
+            <div class="col-6">Categories</div>
+        </div>
+        <div class="row">
+            <div class="col-6">Productes</div>
+            <div class="col-6">Comandes</div>
+        </div>
+    </div>
+
+    <form action="{{ path('producte_productesByCategoria') }}" method="post">
+        <input type="hidden" name="categoria" value="Categoria">
+        <input type="hidden" name="bar" value="{{ barLogged.id }}">
+        <button class="btn btn-dark" type="submit">JSON productes</button>
+    </form>
+    <form action="{{ path('categoria_categories') }}" method="post">
+        <input type="hidden" name="bar" value="{{ barLogged.id }}">
+        <button class="btn btn-dark" type="submit">JSON categories</button>
+    </form>
+{% endblock %}

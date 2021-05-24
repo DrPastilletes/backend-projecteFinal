@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Producte index{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-10 mt-5">
+                <h1>Producte index</h1>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Preu</th>
+                        <th>Categoria</th>
+                        <th>Disponible</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for producte in productes %}
+                        <tr>
+                            <td>{{ producte.id }}</td>
+                            <td>{{ producte.nom }}</td>
+                            <td>{{ producte.preu }} €</td>
+                            <td>{{ producte.categoria }}</td>
+                            <td>{{ producte.disponible ? 'Yes' : 'No' }}</td>
+                            <td>
+                                <a href="{{ path('producte_show', {'id': producte.id}) }}" class="btn btn-dark"><i class="bi bi-eye"></i></a>
+                                <a href="{{ path('producte_edit', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
+                                {% if producte.disponible == 0 %}
+                                <a href="{{ path('producte_modificarDisponible', {'id': producte.id}) }}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+                                {% endif %}
+                                {% if producte.disponible == 1 %}
+                                    <a href="{{ path('producte_modificarDisponible', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-check-lg"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hi ha productes creats encara</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="{{ path('producte_createView') }}" class="btn btn-success"><i class="bi bi-plus"></i></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

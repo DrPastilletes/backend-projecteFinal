@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bar index{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-10 mt-5">
+                <h1>Bar index</h1>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for bar in bars %}
+                        <tr>
+                            <td>{{ bar.id }}</td>
+                            <td>{{ bar.nom }}</td>
+                            <td>
+                                <a href="{{ path('bar_show', {'id': bar.id}) }}" class="btn btn-dark"><i class="bi bi-eye"></i></a>
+                                <a href="{{ path('bar_edit', {'id': bar.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">No s'ha trobat cap bar</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="{{ path('bar_new') }}" class="btn btn-success"><i class="bi bi-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

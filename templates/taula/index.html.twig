@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taula index{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <h1>Taula index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Identificador</th>
+                <th>Ocupada</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taula in taulas %}
+            <tr>
+                <td>{{ taula.id }}</td>
+                <td>{{ taula.identificador }}</td>
+                <td>{{ taula.ocupada ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('taula_show', {'id': taula.id}) }}">show</a>
+                    <a href="{{ path('taula_edit', {'id': taula.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('taula_new') }}">Create new</a>
+{% endblock %}

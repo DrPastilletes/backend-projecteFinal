@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taula{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <h1>Taula</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ taula.id }}</td>
+            </tr>
+            <tr>
+                <th>Identificador</th>
+                <td>{{ taula.identificador }}</td>
+            </tr>
+            <tr>
+                <th>Ocupada</th>
+                <td>{{ taula.ocupada ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('taula_index') }}">back to list</a>
+
+    <a href="{{ path('taula_edit', {'id': taula.id}) }}">edit</a>
+
+    {{ include('taula/_delete_form.html.twig') }}
+{% endblock %}

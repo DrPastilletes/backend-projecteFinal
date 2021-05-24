@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Categoria{% endblock %}
+{% block nomBar %} {{ barLogged.nom }} {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-10 mt-5">
+                <h1>Create new Categoria</h1>
+
+                {{ include('categoria/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+    <a href="{{ path('categoria_index') }}" class="btn btn-dark m-5"><i class="bi bi-arrow-left"></i></a>
+{% endblock %}
