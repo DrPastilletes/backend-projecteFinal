@@ -115,6 +115,26 @@ class ProducteController extends AbstractController
     }
 
     /**
+     * @Route("/editView/{id}", name="producte_editView", methods={"GET","POST"})
+     */
+    public function getEditView(SessionInterface $session, CategoriaRepository $categoriaRepository, BarRepository $barRepository, Producte $producte): Response
+    {
+        if ($session->get('barLogged') == null) {
+            return $this->render('main/index.html.twig', [
+                'arrayErrors' => null,
+            ]);
+        }
+        $bar = $barRepository->findOneBy(['id' => $session->get('barLogged')->getId()]);
+        $categories = $categoriaRepository->findBy([
+            'bar' => $bar
+        ]);
+        return $this->render('producte/create.html.twig', [
+            'categories' => $categories,
+            'producte' => $producte
+        ]);
+    }
+
+    /**
      * @Route("/create", name="producte_create", methods={"GET","POST"})
      */
     public function create(Request $request, SessionInterface $session, BarRepository $barRepository, CategoriaRepository $categoriaRepository): Response
@@ -180,6 +200,25 @@ class ProducteController extends AbstractController
             'producte' => $producte,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}/editProd", name="producte_editProd", methods={"GET","POST"})
+     */
+    public function editProd(Request $request, Producte $producte, SessionInterface $session): Response
+    {
+        if ($session->get('barLogged') == null) {
+            return $this->render('main/index.html.twig', [
+                'arrayErrors' => null,
+            ]);
+        }
+
+        $producte->setNom($request->get("nom"));
+        $producte->setPreu($request->get("preu"));
+        $producte->setCategoria($request->get("categoria"));
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('producte_index');
     }
 
     /**

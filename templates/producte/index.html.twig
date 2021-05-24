@@ -29,7 +29,7 @@
                             <td>{{ producte.disponible ? 'Yes' : 'No' }}</td>
                             <td>
                                 <a href="{{ path('producte_show', {'id': producte.id}) }}" class="btn btn-dark"><i class="bi bi-eye"></i></a>
-                                <a href="{{ path('producte_edit', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ path('producte_editProd', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
                                 {% if producte.disponible == 0 %}
                                 <a href="{{ path('producte_modificarDisponible', {'id': producte.id}) }}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
                                 {% endif %}
