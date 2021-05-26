@@ -6,26 +6,32 @@
     <div class="container-fluid">
         <div class="row d-flex justify-content-center">
             <div class="col-10 mt-5">
-                <h1>Crear un producte</h1>
+                <h1>Editar Producte</h1>
 
-                <form method="post" action="{{ path("producte_create") }}">
+                <form method="post" action="{{ path("producte_editProd") }}">
+                    <input type="hidden" name="id" value="{{ producte.id }}">
                     <div class="form-group">
                         <label for="nom">Nom</label>
                         <input type="text" class="form-control" name="nom" id="nom" value="{{ producte.nom }}">
                     </div>
                     <div class="form-group">
                         <label for="preu">Preu</label>
-                        <input type="number" class="form-control" min="0.01" step="0.01" name="preu" id="preu" value="{{ producte.preu }}">
+                        <input type="number" class="form-control" min="0.01" step="0.01" name="preu" id="preu"
+                               value="{{ producte.preu }}">
                     </div>
                     <div class="form-group">
                         <label for="categoria">Categoria</label>
                         <select class="form-control" name="categoria" id="categoria">
                             {% for categoria in categories %}
-                                <option value="{{ categoria.id }}">{{ categoria.nom }}</option>
+                                {% if producte.categoria.id == categoria.id %}
+                                    <option selected value="{{ categoria.id }}">{{ categoria.nom }}</option>
+                                {% else %}
+                                    <option value="{{ categoria.id }}">{{ categoria.nom }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
-                    <button class="btn btn-success">Crear <i class="bi bi-plus-lg"></i></button>
+                    <button class="btn btn-success">Modificar <i class="bi bi-plus-lg"></i></button>
                 </form>
             </div>
         </div>

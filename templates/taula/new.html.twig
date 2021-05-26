@@ -3,9 +3,14 @@
 {% block title %}New Taula{% endblock %}
 {% block nomBar %} {{ barLogged.nom }} {% endblock %}
 {% block body %}
-    <h1>Create new Taula</h1>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 mt-5">
+    <h1>Crear Taula</h1>
 
     {{ include('taula/_form.html.twig') }}
-
-    <a href="{{ path('taula_index') }}">back to list</a>
+        </div>
+    </div>
+</div>
+    <a href="{{ path('taula_index') }}" class="btn btn-dark m-5"><i class="bi bi-arrow-left"></i></a>
 {% endblock %}

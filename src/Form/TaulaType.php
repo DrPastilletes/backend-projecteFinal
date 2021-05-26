@@ -13,8 +13,6 @@ class TaulaType extends AbstractType
     {
         $builder
             ->add('identificador')
-            ->add('ocupada')
-            ->add('bar')
         ;
     }
 

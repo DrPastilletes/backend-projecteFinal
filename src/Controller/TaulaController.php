@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Taula;
 use App\Form\TaulaType;
+use App\Repository\BarRepository;
 use App\Repository\TaulaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -19,29 +21,59 @@ class TaulaController extends AbstractController
     /**
      * @Route("/", name="taula_index", methods={"GET"})
      */
-    public function index(TaulaRepository $taulaRepository, SessionInterface $session): Response
+    public function index(TaulaRepository $taulaRepository, SessionInterface $session, BarRepository $barRepository): Response
     {
-        if ($session->get('barLogged') ==null){
+
+        if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
         }
-        return $this->render('taula/index.html.twig', [
-            'taulas' => $taulaRepository->findAll(),
+        $bar = $barRepository->findOneBy(['id' => $session->get('barLogged')->getId()]);
+        $taules = $taulaRepository->findBy([
+            'bar' => $bar
         ]);
+        return $this->render('taula/index.html.twig', [
+            'taulas' => $taules,
+        ]);
+    }
+
+    /**
+     * @Route("/taules", name="taula_taulesApi", methods={"POST"})
+     */
+    public function taulesApi(TaulaRepository $taulaRepository, BarRepository $barRepository, Request $request): Response
+    {
+        $array = $request->toArray();
+        $bar = $barRepository->findOneBy(['id' => $array['bar']]);
+        $taules = $taulaRepository->findBy([
+            'bar' => $bar
+        ]);
+        $data = [];
+
+        foreach ($taules as $taula) {
+            $data[] = [
+                'id' => $taula->getId(),
+                'nom' => $taula->getIdentificador(),
+                'ocupada' => $taula->getOcupada()
+            ];
+        }
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     /**
      * @Route("/new", name="taula_new", methods={"GET","POST"})
      */
-    public function new(Request $request, SessionInterface $session): Response
+    public function new(Request $request, SessionInterface $session, BarRepository $barRepository): Response
     {
-        if ($session->get('barLogged') ==null){
+        if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
         }
         $taula = new Taula();
+        $bar = $barRepository->findOneBy(['id' => $session->get('barLogged')->getId()]);
+        $taula->setBar($bar);
+        $taula->setOcupada(0);
         $form = $this->createForm(TaulaType::class, $taula);
         $form->handleRequest($request);
 
@@ -64,7 +96,7 @@ class TaulaController extends AbstractController
      */
     public function show(Taula $taula, SessionInterface $session): Response
     {
-        if ($session->get('barLogged') ==null){
+        if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
@@ -79,7 +111,7 @@ class TaulaController extends AbstractController
      */
     public function edit(Request $request, Taula $taula, SessionInterface $session): Response
     {
-        if ($session->get('barLogged') ==null){
+        if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
@@ -104,12 +136,12 @@ class TaulaController extends AbstractController
      */
     public function delete(Request $request, Taula $taula, SessionInterface $session): Response
     {
-        if ($session->get('barLogged') ==null){
+        if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
         }
-        if ($this->isCsrfTokenValid('delete'.$taula->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $taula->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($taula);
             $entityManager->flush();

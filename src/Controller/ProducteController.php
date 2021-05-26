@@ -128,7 +128,7 @@ class ProducteController extends AbstractController
         $categories = $categoriaRepository->findBy([
             'bar' => $bar
         ]);
-        return $this->render('producte/create.html.twig', [
+        return $this->render('producte/editProd.html.twig', [
             'categories' => $categories,
             'producte' => $producte
         ]);
@@ -203,20 +203,29 @@ class ProducteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/editProd", name="producte_editProd", methods={"GET","POST"})
+     * @Route("/editProd", name="producte_editProd", methods={"POST"})
      */
-    public function editProd(Request $request, Producte $producte, SessionInterface $session): Response
+    public function editProd(Request $request, SessionInterface $session, ProducteRepository $producteRepository, CategoriaRepository $categoriaRepository): Response
     {
         if ($session->get('barLogged') == null) {
             return $this->render('main/index.html.twig', [
                 'arrayErrors' => null,
             ]);
         }
-
+        $producte = $producteRepository->findOneBy([
+            'id' => $request->get('id'),
+        ]);
+        $categoria = $categoriaRepository->findOneBy([
+            'id' => $request->get("categoria")
+        ]);
         $producte->setNom($request->get("nom"));
         $producte->setPreu($request->get("preu"));
-        $producte->setCategoria($request->get("categoria"));
-        $this->getDoctrine()->getManager()->flush();
+        $producte->setCategoria($categoria);
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($producte);
+        $entityManager->flush();
 
         return $this->redirectToRoute('producte_index');
     }

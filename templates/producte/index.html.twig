@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row d-flex justify-content-center">
             <div class="col-10 mt-5">
-                <h1>Producte index</h1>
+                <h1>Llista Productes</h1>
 
                 <table class="table">
                     <thead>
@@ -26,10 +26,10 @@
                             <td>{{ producte.nom }}</td>
                             <td>{{ producte.preu }} €</td>
                             <td>{{ producte.categoria }}</td>
-                            <td>{{ producte.disponible ? 'Yes' : 'No' }}</td>
+                            <td>{{ producte.disponible ? 'Si' : 'No' }}</td>
                             <td>
                                 <a href="{{ path('producte_show', {'id': producte.id}) }}" class="btn btn-dark"><i class="bi bi-eye"></i></a>
-                                <a href="{{ path('producte_editProd', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ path('producte_editView', {'id': producte.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
                                 {% if producte.disponible == 0 %}
                                 <a href="{{ path('producte_modificarDisponible', {'id': producte.id}) }}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
                                 {% endif %}
