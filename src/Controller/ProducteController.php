@@ -64,6 +64,29 @@ class ProducteController extends AbstractController
     }
 
     /**
+     * @Route("/productesById", name="producte_productesById", methods={"POST"})
+     */
+    public function productesById(ProducteRepository $producteRepository, CategoriaRepository $categoriaRepository, BarRepository $barRepository, SessionInterface $session, Request $request): JsonResponse
+    {
+        $array = $request->toArray();
+        $producte = $producteRepository->findOneBy([
+            'id' => $array['idProducte']
+        ]);
+        $data = [];
+
+            $data[] = [
+                'id' => $producte->getId(),
+                'nom' => $producte->getNom(),
+                'preu' => $producte->getPreu(),
+                'disponible' => $producte->getDisponible()
+            ];
+
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+
+    /**
      * @Route("/new", name="producte_new", methods={"GET","POST"})
      */
     public function new(Request $request, SessionInterface $session, BarRepository $barRepository): Response
