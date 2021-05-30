@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comanda index{% endblock %}
+
+{% block body %}
+    <h1>Llista Comandes</h1>
+    <div class="container-fluid">
+        <div class="row" id="comandes">
+            {% for comanda in comandas %}
+                <div class="card m-3" style="width: 18rem;" id="{{ comanda.id }}">
+                    <div class="card-header">
+                        Taula: {{ comanda.taula.identificador }}
+                        <button class="btn btn-success ml-5" onclick="acabarComanda({{ comanda.id }})"><i
+                                    class="bi bi-check-lg"></i></button>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for producte in comanda.productes %}
+                            <li class="list-group-item">{{ producte.nom }} | {{ producte.preu }} €</li>
+                        {% endfor %}
+                        <li class="list-group-item">{{ comanda.comentari }}</li>
+                        <li class="list-group-item" style="background-color: palegreen">{{ comanda.preuTotal }} €</li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+            integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        console.log("snafi");
+        var socket;
+        socket = io.connect("http://localhost:3000");
+        /*function enviar() {
+            socket.emit('set-order','pito')
+        }*/
+        socket.on('order-sent', (order) => {
+            console.log(order);
+            console.log(order.taula);
+            json = JSON.stringify(order);
+            $.ajax({
+                type: "POST",
+                url: "/comanda/afegirComandaPost",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: json,
+                success: function (data) {
+                    if (data != null) {
+
+                        var divCard = document.createElement("div");
+                        divCard.className = "card m-3";
+                        divCard.id = data["id"];
+                        divCard.style.width = "18rem";
+
+                        var buttonComanda = document.createElement("button");
+                        buttonComanda.className = "btn btn-success ml-5";
+                        buttonComanda.addEventListener('click', acabarComanda(data['id']));
+                        buttonComanda.innerHTML = "<i class='bi bi-check-lg'></i>";
+
+                        var divCardHeader = document.createElement("div");
+                        divCardHeader.className = "card-header";
+                        divCardHeader.innerText = "Taula: " + data["taula"];
+                        divCardHeader.appendChild(buttonComanda);
+                        divCard.appendChild(divCardHeader);
+
+                        var ul = document.createElement("ul");
+                        ul.className = "list-group list-group-flush";
+
+                        var array = data["productes"];
+
+                        for (let i = 0; i < array.length; i++) {
+                            var preu = array[i]["preu"];
+                            var preuRodo = (Math.round(preu * 100) / 100).toFixed(2);
+                            var li = document.createElement("li");
+                            li.className = "list-group-item";
+                            li.innerText = array[i]["nom"] + " | " + preuRodo+" €";
+                            ul.appendChild(li);
+                        }
+
+                        var liComentari = document.createElement("li");
+                        liComentari.className = "list-group-item";
+                        liComentari.innerText = data["comentari"];
+                        ul.appendChild(liComentari);
+
+                        var preuTotal = parseInt(data["preu"]);
+                        var preuTotalRodo = (Math.round(preuTotal * 100) / 100).toFixed(2);
+                        var liPreu = document.createElement("li");
+                        liPreu.className = "list-group-item";
+                        liPreu.innerText = preuTotalRodo+" €";
+                        liPreu.style.backgroundColor = "palegreen";
+                        ul.appendChild(liPreu);
+
+                        divCard.appendChild(ul);
+                        document.getElementById("comandes").appendChild(divCard);
+                    }
+                }
+            })
+        })
+
+        function acabarComanda(id) {
+            let idJson = {
+                "id": id
+            };
+            json = JSON.stringify(idJson);
+            $.ajax({
+                type: "POST",
+                url: "/comanda/acabarComanda",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: json,
+                success: function (data) {
+                    document.getElementById(id).remove();
+                }
+            })
+        }
+    </script>
+{% endblock %}

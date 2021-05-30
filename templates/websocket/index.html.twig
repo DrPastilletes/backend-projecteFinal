@@ -16,20 +16,32 @@
         <li>Your controller at <code><a href="{{ '/app/cafeVic/src/Controller/WebsocketController.php'|file_link(0) }}">src/Controller/WebsocketController.php</a></code></li>
         <li>Your template at <code><a href="{{ '/app/cafeVic/templates/websocket/index.html.twig'|file_link(0) }}">templates/websocket/index.html.twig</a></code></li>
     </ul>
-    <button onclick="enviar()">Enviar</button>
 </div>
 {% endblock %}
 {% block javascripts %}
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+        console.log("cumdado");
         var socket;
         socket = io.connect("http://localhost:3000");
-        function enviar() {
+        /*function enviar() {
             socket.emit('set-order','pito')
-        }
+        }*/
         socket.on('order-sent', (order) => {
-            console.log("kkk");
             console.log(order);
+            console.log(order.taula);
+            json = JSON.stringify(order);
+            $.ajax({
+                type: "POST",
+                url: "/comanda/afegirComandaPost",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: json,
+                success: function (data) {
+                    console.log(data);
+                }
+            })
         })
     </script>
 {% endblock %}

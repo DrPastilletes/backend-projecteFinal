@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comanda{% endblock %}
+
+{% block body %}
+    <h1>Comanda</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ comanda.id }}</td>
+            </tr>
+            <tr>
+                <th>Acabat</th>
+                <td>{{ comanda.acabat ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>HoraAcabat</th>
+                <td>{{ comanda.horaAcabat ? comanda.horaAcabat|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>PreuTotal</th>
+                <td>{{ comanda.preuTotal }}</td>
+            </tr>
+            <tr>
+                <th>Comentari</th>
+                <td>{{ comanda.comentari }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('comanda_index') }}">back to list</a>
+
+    <a href="{{ path('comanda_edit', {'id': comanda.id}) }}">edit</a>
+
+    {{ include('comanda/_delete_form.html.twig') }}
+{% endblock %}
