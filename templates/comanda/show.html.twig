@@ -3,36 +3,62 @@
 {% block title %}Comanda{% endblock %}
 
 {% block body %}
-    <h1>Comanda</h1>
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-10 mt-5">
+                <h1>Comanda</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ comanda.id }}</td>
-            </tr>
-            <tr>
-                <th>Acabat</th>
-                <td>{{ comanda.acabat ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>HoraAcabat</th>
-                <td>{{ comanda.horaAcabat ? comanda.horaAcabat|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>PreuTotal</th>
-                <td>{{ comanda.preuTotal }}</td>
-            </tr>
-            <tr>
-                <th>Comentari</th>
-                <td>{{ comanda.comentari }}</td>
-            </tr>
-        </tbody>
-    </table>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ comanda.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Acabat</th>
+                        <td>{{ comanda.acabat ? 'Si' : 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <th>HoraAcabat</th>
+                        <td>{{ comanda.horaAcabat ? comanda.horaAcabat|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>PreuTotal</th>
+                        <td>{{ comanda.preuTotal }} €</td>
+                    </tr>
+                    <tr>
+                        <th>Comentari</th>
+                        <td>{{ comanda.comentari }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h2>Productes</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Preu</th>
+                        <th>Categoria</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for producte in comanda.productes %}
+                    <tr>
+                        <td>{{ producte.id }}</td>
+                        <td>{{ producte.nom }}</td>
+                        <td>{{ producte.preu }} €</td>
+                        <td>{{ producte.categoria }}</td>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-    <a href="{{ path('comanda_index') }}">back to list</a>
+                <a href="{{ path('comanda_index') }}" class="btn btn-dark m-5"><i class="bi bi-arrow-left"></i></a>
 
-    <a href="{{ path('comanda_edit', {'id': comanda.id}) }}">edit</a>
+                <a href="{{ path('comanda_edit', {'id': comanda.id}) }}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
 
-    {{ include('comanda/_delete_form.html.twig') }}
+                {{ include('comanda/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

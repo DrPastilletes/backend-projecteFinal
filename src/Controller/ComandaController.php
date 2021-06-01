@@ -31,8 +31,24 @@ class ComandaController extends AbstractController
                 'arrayErrors' => null,
             ]);
         }
+
         return $this->render('comanda/index.html.twig', [
-            'comandas' => $comandaRepository->findBy(['acabat' => 0, 'bar' =>$barRepository->findOneBy(['id'=>$session->get('barLogged')])]),
+            'comandas' => $comandaRepository->findBy(['acabat' => 0, 'bar' => $barRepository->findOneBy(['id' => $session->get('barLogged')])]),
+        ]);
+    }
+
+    /**
+     * @Route("/comandesAcabades", name="comandesAcabades", methods={"GET"})
+     */
+    public function comndesAcabades(ComandaRepository $comandaRepository, SessionInterface $session, BarRepository $barRepository): Response
+    {
+        if ($session->get('barLogged') == null) {
+            return $this->render('main/index.html.twig', [
+                'arrayErrors' => null,
+            ]);
+        }
+        return $this->render('comanda/indexAcabades.html.twig', [
+            'comandas' => $comandaRepository->findBy(['acabat' => 1, 'bar' => $barRepository->findOneBy(['id' => $session->get('barLogged')])]),
         ]);
     }
 
@@ -51,7 +67,7 @@ class ComandaController extends AbstractController
         $entityManager->persist($comanda);
         $entityManager->flush();
 
-        return new JsonResponse($array,Response::HTTP_OK);
+        return new JsonResponse($array, Response::HTTP_OK);
     }
 
     /**
@@ -60,9 +76,11 @@ class ComandaController extends AbstractController
     public function afegirComandaPost(Request $request, BarRepository $barRepository, SessionInterface $session, TaulaRepository $taulaRepository, ProducteRepository $producteRepository): JsonResponse
     {
         $array = $request->toArray();
+        $arrayComanda = [];
         if ($array['bar'] == $session->get('barLogged')->getId()) {
             $bar = $barRepository->findOneBy(['id' => $array['bar']]);
             $taula = $taulaRepository->findOneBy(['id' => $array['taula']]);
+
             $comandax = new Comanda();
             $comandax->setAcabat(false);
             $comandax->setBar($bar);
@@ -73,18 +91,26 @@ class ComandaController extends AbstractController
             $productes = $array['productes'];
 
             foreach ($productes as $producte) {
-                $prod = $producteRepository->findOneBy(['id' => $producte["id"]]) ;
+                $prod = $producteRepository->findOneBy(['id' => $producte["id"]]);
+                $prod->addComanda($comandax);
                 $comandax->addProducte($prod);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comandax);
             $entityManager->flush();
-        }else{
-            $array = null;
+            $arrayComanda = [
+                "id" => $comandax->getId(),
+                "comentari" => $comandax->getComentari(),
+                "taula" => $array['taula'],
+                "productes" => $productes,
+                "preuTotal" => $comandax->getPreuTotal()
+            ];
+        } else {
+            $arrayComanda = null;
         }
 
-        return new JsonResponse($array,Response::HTTP_OK);
+        return new JsonResponse($arrayComanda, Response::HTTP_OK);
     }
 
     /**
@@ -153,7 +179,6 @@ class ComandaController extends AbstractController
 
         return $this->redirectToRoute('comanda_index');
     }
-
 
 
 }

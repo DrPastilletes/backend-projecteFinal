@@ -86,9 +86,10 @@ class Comanda
 
     public function addProducte(Producte $producte): self
     {
-        if (!$this->productes->contains($producte)) {
-            $this->productes[] = $producte;
-        }
+        $this->productes[] = $producte;
+        /*if (!$this->productes->contains($producte)) {
+
+        }*/
 
         return $this;
     }
